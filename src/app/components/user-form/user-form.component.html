@@ -22,6 +22,17 @@
         <span class="error" *ngIf="userForm.get('age')?.errors">{{ getErrorMessage('age') }}</span>
       </div>
       <div class="form-field">
+        <label>Choose Your Skills:</label>
+        <ng-multiselect-dropdown
+                [placeholder]="'Select City'"
+                formControlName="skills"
+                [settings]="settings"
+                [data]="skillList"
+                [disabled]="false">
+        </ng-multiselect-dropdown>
+        <span class="error" *ngIf="userForm.get('skills')?.errors">{{ getErrorMessage('skills') }}</span>
+      </div>
+      <div class="form-field">
         <label for="email">Email:</label>
         <input type="email" id="email" formControlName="email">
         <span class="error" *ngIf="userForm.get('email')?.errors">{{ getErrorMessage('email') }}</span>

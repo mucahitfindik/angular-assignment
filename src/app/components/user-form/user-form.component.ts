@@ -1,18 +1,25 @@
 // src/app/components/user-form/user-form.component.ts
 
 import { Component, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'
-import { User } from '../../models/user.model'
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms'
+import {Skill, User} from '../../models/user.model'
 import { UserService } from '../../services/user-service.service'
 import { CommonModule } from '@angular/common'
 import {combineLatest, startWith} from "rxjs";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgMultiSelectDropDownModule
   ],
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css']
@@ -22,6 +29,13 @@ export class UserFormComponent implements OnInit {
   loading = false;
   error: string | null = null;
   full_name: string | null = null;
+  public skillList = [] as Skill[];
+  public settings = {
+    allowSearchFilter: true,
+    limitSelection: 5,
+    itemsShowLimit: 5,
+    searchPlaceholderText: 'Search here...',
+  };
 
   constructor(private fb: FormBuilder, private userService: UserService) {
     this.userForm = this.fb.group({
@@ -30,7 +44,9 @@ export class UserFormComponent implements OnInit {
       age: ['', [Validators.required, Validators.min(1)]],
       email: ['', [Validators.required, Validators.email /*Validators.pattern(/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/)*/]],
       time:[''],
+      skills: [[], Validators.required]
     })
+    this.skillList = JSON.parse(localStorage.getItem('skills') || '[]');
   }
 
   ngOnInit() {
