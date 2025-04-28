@@ -30,7 +30,7 @@ export class ApiService {
       const initialData: UserBackend = {
         first_name: 'John',
         last_name: 'Doe',
-        age: 0,
+        age: 30,
         email: 'john.doe@example.com',
         skills: [] as Skill[]
       }
