@@ -27,7 +27,7 @@ export class UserFormComponent implements OnInit {
       last_name: ['', Validators.required],
       full_name: [{ value: '', disabled: true }],
       age: ['', [Validators.required, Validators.min(1)]],
-      email: ['', [Validators.required, Validators.email /*Validators.pattern(/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/)*/]]
+      email: ['', [Validators.required, Validators.email /*Validators.pattern(/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/)*/]],
       time:[''],
     })
   }
