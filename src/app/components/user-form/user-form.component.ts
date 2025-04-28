@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { User } from '../../models/user.model'
 import { UserService } from '../../services/user-service.service'
 import { CommonModule } from '@angular/common'
+import {combineLatest, startWith} from "rxjs";
 
 @Component({
   selector: 'app-user-form',
@@ -20,12 +21,12 @@ export class UserFormComponent implements OnInit {
   userForm: FormGroup
   loading = false;
   error: string | null = null;
+  full_name: string | null = null;
 
   constructor(private fb: FormBuilder, private userService: UserService) {
     this.userForm = this.fb.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
-      full_name: [{ value: '', disabled: true }],
       age: ['', [Validators.required, Validators.min(1)]],
       email: ['', [Validators.required, Validators.email /*Validators.pattern(/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/)*/]],
       time:[''],
@@ -34,6 +35,12 @@ export class UserFormComponent implements OnInit {
 
   ngOnInit() {
     this.loadUserData()
+    combineLatest([
+      this.userForm.get('first_name')!.valueChanges.pipe(startWith(this.userForm.get('first_name')!.value)),
+      this.userForm.get('last_name')!.valueChanges.pipe(startWith(this.userForm.get('last_name')!.value))]
+    ).subscribe(([first, last]) => {
+      this.full_name = `${first} ${last}`
+    });
   }
 
   loadUserData() {
