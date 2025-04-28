@@ -5,7 +5,7 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule, AbstractControl, ValidationErrors, FormArray
 } from '@angular/forms'
 import {Skill, User} from '../../models/user.model'
 import { UserService } from '../../services/user-service.service'
@@ -44,7 +44,7 @@ export class UserFormComponent implements OnInit {
       age: ['', [Validators.required, Validators.min(1)]],
       email: ['', [Validators.required, Validators.email /*Validators.pattern(/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/)*/]],
       time:[''],
-      skills: [[], Validators.required]
+      skills: [[], [Validators.required, this.minSelected(2)]]
     })
     this.skillList = JSON.parse(localStorage.getItem('skills') || '[]');
   }
@@ -57,6 +57,12 @@ export class UserFormComponent implements OnInit {
     ).subscribe(([first, last]) => {
       this.full_name = `${first} ${last}`
     });
+  }
+  minSelected(min: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const formArray = control as FormArray;
+      return formArray && formArray.value.length >= min ? null : { minSelected: true };
+    };
   }
 
   loadUserData() {
@@ -94,6 +100,8 @@ export class UserFormComponent implements OnInit {
         return 'Enter a valid email'
       } else if(control.errors['min']) {
         return `${controlName.charAt(0).toUpperCase() + controlName.slice(1)} must be greater than 0`
+      } else if(control.errors['minSelected']){
+        return 'Please select more option(s)'
       }/* else if (control.errors['pattern'] && controlName === 'email') {
         return 'Enter a valid email'
       }*/
