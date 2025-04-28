@@ -14,7 +14,8 @@ It only emulates a backend on your local storage.
 import { Injectable } from '@angular/core'
 import { Observable, of, throwError } from 'rxjs'
 import { delay } from 'rxjs/operators'
-import { User, UserBackend } from '../models/user.model'
+import { User, UserBackend, Skill } from '../models/user.model'
+import {SKILLS} from "../constants/app.constants";
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,14 @@ export class ApiService {
       const initialData: UserBackend = {
         first_name: 'John',
         last_name: 'Doe',
-        age: 30,
-        email: 'john.doe@example.com'
+        age: 0,
+        email: 'john.doe@example.com',
+        skills: [] as Skill[]
       }
       localStorage.setItem(this.storageKey, JSON.stringify(initialData))
     }
+    if (!localStorage.getItem("skills"))
+      localStorage.setItem('skills', JSON.stringify(SKILLS));
   }
   fetchUser(): Observable<UserBackend> {
     const data = localStorage.getItem(this.storageKey)
@@ -53,7 +57,8 @@ export class ApiService {
       first_name: data.first_name,
       last_name: data.last_name,
       age: data.age,
-      email: data.email
+      email: data.email,
+      skills: data.skills
     }
     localStorage.setItem(this.storageKey, JSON.stringify(userData))
     return of(userData).pipe(delay(1000))
