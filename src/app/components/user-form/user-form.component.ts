@@ -26,7 +26,7 @@ export class UserFormComponent implements OnInit {
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       full_name: [{ value: '', disabled: true }],
-      age: ['', [Validators.required]],
+      age: ['', [Validators.required, Validators.min(1)]],
       email: ['', [Validators.required, Validators.email /*Validators.pattern(/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/)*/]]
     })
   }
@@ -68,6 +68,8 @@ export class UserFormComponent implements OnInit {
         return 'This field is required'
       } else if (control.errors['email']) {
         return 'Enter a valid email'
+      } else if(control.errors['min']) {
+        return `${controlName.charAt(0).toUpperCase() + controlName.slice(1)} must be greater than 0`
       }/* else if (control.errors['pattern'] && controlName === 'email') {
         return 'Enter a valid email'
       }*/
